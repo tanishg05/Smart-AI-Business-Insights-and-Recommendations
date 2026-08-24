@@ -1,25 +1,18 @@
-# ==========================================
 # SUPPLY CHAIN ANALYTICS DASHBOARD
 # Consulting Style Professional Version
-# ==========================================
 
 import streamlit as st
 import pandas as pd
 import plotly.express as px
 import numpy as np
-
-# ==========================================
 # PAGE CONFIG
-# ==========================================
 
 st.set_page_config(
     page_title="Supply Chain Intelligence Dashboard",
     layout="wide"
 )
 
-# ==========================================
 # PROFESSIONAL UI STYLING
-# ==========================================
 
 st.markdown("""
 <style>
@@ -70,16 +63,11 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ==========================================
 # TITLE
-# ==========================================
 
 st.title("Business Analysis Dashboard")
 
-# ==========================================
 # SIDEBAR NAVIGATION
-# ==========================================
-
 st.sidebar.title("Navigation")
 
 section = st.sidebar.radio(
@@ -94,10 +82,7 @@ section = st.sidebar.radio(
     ]
 )
 
-# ==========================================
 # FILE UPLOAD
-# ==========================================
-
 uploaded_file = st.file_uploader(
     "Upload Dataset",
     type=["csv"]
@@ -106,11 +91,7 @@ uploaded_file = st.file_uploader(
 if uploaded_file:
 
     df = pd.read_csv(uploaded_file)
-
-    # ==========================================
     # PREPROCESSING
-    # ==========================================
-
     df["date"] = pd.to_datetime(df["date"])
 
     df["month"] = df["date"].dt.month
@@ -122,10 +103,7 @@ if uploaded_file:
         9: "Autumn", 10: "Autumn", 11: "Autumn"
     })
 
-    # ==========================================
     # COMMON METRICS
-    # ==========================================
-
     total_sales = df["units_sold"].sum()
 
     avg_price = df["price_unit"].mean()
@@ -137,9 +115,7 @@ if uploaded_file:
         / df["stock_available"].sum()
     )
 
-    # ==========================================
     # EXECUTIVE OVERVIEW
-    # ==========================================
 
     if section == "Executive Overview":
 
@@ -194,9 +170,7 @@ if uploaded_file:
             use_container_width=True
         )
 
-    # ==========================================
     # SALES PERFORMANCE
-    # ==========================================
 
     elif section == "Sales Performance":
 
@@ -267,9 +241,7 @@ if uploaded_file:
             use_container_width=True
         )
 
-    # ==========================================
     # SEASONAL ANALYSIS
-    # ==========================================
 
     elif section == "Seasonal Analysis":
 
@@ -314,9 +286,7 @@ if uploaded_file:
             use_container_width=True
         )
 
-    # ==========================================
     # OPERATIONAL INSIGHTS
-    # ==========================================
 
     elif section == "Operational Insights":
 
@@ -353,9 +323,7 @@ if uploaded_file:
                 use_container_width=True
             )
 
-        # ==========================================
     # AI INSIGHTS
-    # ==========================================
 
     elif section == "AI Insights":
 
@@ -431,10 +399,7 @@ Approximately **{high_ratio*100:.1f}%** of products fall into the **High Demand*
 • Optimize warehouse stocking strategy  
 
 """)
-    
-    # ==========================================
     # RECOMMENDATIONS
-    # ==========================================
 
     elif section == "Recommendations":
 
