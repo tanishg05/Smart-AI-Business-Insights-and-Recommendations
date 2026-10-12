@@ -112,7 +112,7 @@ export default function DashboardPage({ data, insights }) {
 
         <SectionCard
           title="Proactive signals"
-          subtitle={insights.source === 'groq' ? `Scanned and summarised by Groq · ${insights.model}` : 'Scanned by the local analytics engine'}
+          subtitle={insights.source === 'groq' ? `Scanned and summarised by Groq · ${insights.model}` : insights.fallback_reason ? `Local engine (Groq failed: ${insights.fallback_reason})` : 'Scanned by the local analytics engine'}
           tools={
             <button className="btn btn--ghost btn--icon btn--sm" onClick={insights.reload} title="Rescan" aria-label="Rescan insights">
               <RotateCw size={12} style={insights.loading ? { animation: 'spin .8s linear infinite' } : undefined} />

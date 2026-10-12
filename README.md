@@ -168,7 +168,7 @@ The copilot (⌘K / Ctrl+K), proactive insights, chart "Inspect" buttons and the
 
 ```env
 GROQ_API_KEY=gsk_...
-GROQ_MODEL=llama-3.3-70b-versatile
+GROQ_MODEL=openai/gpt-oss-120b
 ```
 
 3. Restart the backend.

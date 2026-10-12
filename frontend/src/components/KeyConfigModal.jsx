@@ -24,6 +24,11 @@ export default function KeyConfigModal() {
             ? `Groq is live on ${status.model}.`
             : 'The copilot is running on the local analytics engine. Answers are computed from your data but without live LLM reasoning.'}
         </p>
+        {status.last_error && (
+          <div className="engine-note" style={{ borderColor: 'rgba(239,68,68,.3)', background: 'rgba(239,68,68,.06)' }}>
+            Last Groq error: {status.last_error}
+          </div>
+        )}
         <ol>
           <li>
             Create a key at <a href="https://console.groq.com/keys" target="_blank" rel="noreferrer">console.groq.com/keys</a>.
@@ -32,7 +37,7 @@ export default function KeyConfigModal() {
             Add it to <span className="mono">backend/.env</span> (the key stays on the server and is never sent to the browser):
           </li>
         </ol>
-        <div className="codeblock">{'GROQ_API_KEY=gsk_…\nGROQ_MODEL=llama-3.3-70b-versatile'}</div>
+        <div className="codeblock">{'GROQ_API_KEY=gsk_…\nGROQ_MODEL=openai/gpt-oss-120b'}</div>
         <ol start={3}>
           <li>Restart the backend, then check again.</li>
         </ol>
