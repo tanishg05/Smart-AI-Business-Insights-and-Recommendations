@@ -1,12 +1,20 @@
 const isNil = (value) => value === null || value === undefined || Number.isNaN(Number(value));
 
+// Intl throws RangeError for fraction digits outside 0–20 or for non-numbers; clamp defensively.
+const safeDigits = (digits, fallback = 0) => {
+  const n = Number(digits);
+  return Number.isFinite(n) ? Math.min(20, Math.max(0, Math.round(n))) : fallback;
+};
+
 export function formatNumber(value, digits = 0) {
   if (isNil(value)) return '—';
-  return new Intl.NumberFormat('en-US', { maximumFractionDigits: digits, minimumFractionDigits: digits }).format(Number(value));
+  const d = safeDigits(digits);
+  return new Intl.NumberFormat('en-US', { maximumFractionDigits: d, minimumFractionDigits: d }).format(Number(value));
 }
 
 export function formatCompact(value, digits = 1) {
   if (isNil(value)) return '—';
+  digits = safeDigits(digits, 1);
   const n = Number(value);
   const abs = Math.abs(n);
   if (abs >= 1e9) return `${(n / 1e9).toFixed(digits)}B`;
@@ -19,12 +27,13 @@ export function formatCompact(value, digits = 1) {
 export function formatCurrency(value, { compact = false, digits } = {}) {
   if (isNil(value)) return '—';
   const n = Number(value);
-  if (compact) return `${n < 0 ? '−' : ''}$${formatCompact(Math.abs(n), digits ?? 2)}`;
+  if (compact) return `${n < 0 ? '−' : ''}$${formatCompact(Math.abs(n), safeDigits(digits, 2))}`;
+  const d = safeDigits(digits, Math.abs(n) >= 100 ? 0 : 2);
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
-    maximumFractionDigits: digits ?? (Math.abs(n) >= 100 ? 0 : 2),
-    minimumFractionDigits: digits ?? (Math.abs(n) >= 100 ? 0 : 2),
+    maximumFractionDigits: d,
+    minimumFractionDigits: d,
   }).format(n);
 }
 

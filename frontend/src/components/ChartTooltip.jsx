@@ -1,5 +1,8 @@
 import { formatDate, formatNumber } from '../utils/formatters';
 
+// Wrapped so a row object passed as the second argument is never read as a digits count.
+const defaultFormat = (v) => formatNumber(v);
+
 /**
  * Glass tooltip for Recharts.
  * `rows` overrides the default series list: [{ key, label, color, format }].
@@ -12,13 +15,13 @@ export default function ChartTooltip({ active, payload, label, rows, labelFormat
   const items = rows
     ? rows
         .filter((r) => datum[r.key] !== undefined && datum[r.key] !== null)
-        .map((r) => ({ name: r.label, color: r.color, value: (r.format || formatNumber)(datum[r.key], datum) }))
+        .map((r) => ({ name: r.label, color: r.color, value: (r.format || defaultFormat)(datum[r.key], datum) }))
     : payload
         .filter((p) => p.value !== undefined && p.value !== null && !p.payload?.hidden)
         .map((p) => ({
           name: p.name,
           color: p.color || p.stroke || p.fill,
-          value: (valueFormatter || formatNumber)(Array.isArray(p.value) ? p.value.join(' – ') : p.value, p),
+          value: (valueFormatter || defaultFormat)(Array.isArray(p.value) ? p.value.join(' – ') : p.value, p),
         }));
 
   return (
