@@ -1,0 +1,101 @@
+:root {
+  --bg: #f5f7fb;
+  --surface: #ffffff;
+  --surface-muted: #f8fafc;
+  --text: #0f172a;
+  --text-soft: #64748b;
+  --border: #e2e8f0;
+  --accent: #2563eb;
+  --accent-2: #0f766e;
+  --accent-3: #7c3aed;
+  --success: #16a34a;
+  --warning: #f59e0b;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+button, select, input { font: inherit; }
+
+.app-shell { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: 280px;
+  background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
+  color: white;
+  padding: 24px 16px;
+}
+
+.sidebar__brand { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+.sidebar__logo {
+  width: 44px; height: 44px; display: grid; place-items: center; border-radius: 12px; background: rgba(255,255,255,0.14); font-weight: 700;
+}
+.sidebar__brand h3 { margin: 0; }
+.sidebar__brand p { margin: 2px 0 0; font-size: 13px; color: #cbd5e1; }
+.sidebar__nav { display: flex; flex-direction: column; gap: 8px; }
+.nav-item {
+  border: none; background: transparent; color: white; padding: 12px 14px; border-radius: 10px; display: flex; align-items: center; gap: 10px; cursor: pointer; text-align: left;
+}
+.nav-item:hover, .nav-item.active { background: rgba(255,255,255,0.12); }
+
+.main-shell { flex: 1; display: flex; flex-direction: column; }
+.navbar {
+  background: var(--surface);
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.eyebrow { font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--accent); margin: 0 0 4px; }
+.navbar h1 { margin: 0; font-size: 24px; }
+.badge { background: var(--surface-muted); border: 1px solid var(--border); padding: 8px 12px; border-radius: 999px; color: var(--text-soft); }
+
+.content { padding: 24px; }
+
+.upload-panel, .panel, .filters-bar, .empty-state, .error-state, .loader, .snapshot-box, .recommendation-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 16px; box-shadow: 0 8px 24px rgba(15,23,42,0.04);
+}
+.upload-panel { padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.upload-panel h3, .panel h3 { margin: 0 0 4px; }
+.upload-panel p, .panel p, .empty-state p, .error-state p { margin: 0; color: var(--text-soft); }
+.filters-bar { padding: 14px 16px; display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.field-label { font-weight: 600; color: var(--text-soft); }
+.filters-bar select { border: 1px solid var(--border); border-radius: 10px; padding: 8px 12px; background: white; }
+.btn { border: none; border-radius: 10px; padding: 10px 14px; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; }
+.btn-primary { background: var(--accent); color: white; }
+
+.kpi-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin-bottom: 20px; }
+.kpi-card { padding: 18px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; }
+.kpi-label { margin: 0 0 8px; color: var(--text-soft); font-size: 13px; }
+.kpi-value { margin: 0; font-size: 24px; }
+.kpi-subtitle { margin-top: 8px; color: var(--text-soft); font-size: 13px; }
+
+.grid-2 { display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; margin-bottom: 20px; }
+.panel { padding: 16px; }
+.panel__header { margin-bottom: 12px; }
+.panel__body { min-height: 220px; }
+.cards-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.recommendation-card, .snapshot-box { padding: 14px; }
+.recommendation-card h4, .snapshot-box p { margin: 0 0 8px; }
+.snapshot-box h3 { margin: 0; font-size: 28px; }
+.stack { display: grid; gap: 12px; }
+.loader, .empty-state, .error-state { padding: 28px; text-align: center; margin-top: 20px; }
+.spinner { width: 42px; height: 42px; border: 3px solid #e2e8f0; border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 12px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 960px) {
+  .kpi-grid, .grid-2, .cards-grid { grid-template-columns: 1fr; }
+  .sidebar { width: 220px; }
+}
+
+@media (max-width: 720px) {
+  .app-shell { flex-direction: column; }
+  .sidebar { width: 100%; }
+  .navbar { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .upload-panel { flex-direction: column; align-items: flex-start; gap: 12px; }
+}

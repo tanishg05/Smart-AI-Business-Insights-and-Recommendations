@@ -1,0 +1,5 @@
+date,units_sold,price_unit,delivery_days,delivered_qty,stock_available,channel,region,category
+2024-01-01,100,10,3,90,120,Online,North,Juice
+2024-01-02,120,11,4,110,130,Store,South,Juice
+2024-01-03,90,12,5,95,140,Online,East,Milk
+2024-01-04,80,13,6,85,150,Store,West,Milk
