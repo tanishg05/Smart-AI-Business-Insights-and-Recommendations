@@ -1,0 +1,69 @@
+/* Design tokens: obsidian operations terminal. */
+:root {
+  /* Surfaces */
+  --bg-primary: #0b0f17;
+  --bg-surface: #111827;
+  --bg-elevated: #161f30;
+  --bg-inset: #0d121c;
+  --bg-hover: rgba(255, 255, 255, 0.035);
+  --bg-active: rgba(56, 189, 248, 0.08);
+
+  /* Borders */
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-faint: rgba(255, 255, 255, 0.05);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --border-focus: rgba(56, 189, 248, 0.3);
+
+  /* Text */
+  --text-primary: #e6eaf2;
+  --text-secondary: #a3adbf;
+  --text-muted: #6b768a;
+  --text-faint: #4a5468;
+
+  /* Accents */
+  --accent-primary: #38bdf8;
+  --accent-primary-soft: rgba(56, 189, 248, 0.12);
+  --status-healthy: #10b981;
+  --status-healthy-soft: rgba(16, 185, 129, 0.12);
+  --status-warning: #f59e0b;
+  --status-warning-soft: rgba(245, 158, 11, 0.12);
+  --status-critical: #ef4444;
+  --status-critical-soft: rgba(239, 68, 68, 0.12);
+
+  /* Type */
+  --font-ui: 'Inter', 'Geist', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --tracking-tight: -0.015em;
+  --tracking-label: 0.06em;
+  --fs-2xs: 10.5px;
+  --fs-xs: 11.5px;
+  --fs-sm: 12.5px;
+  --fs-md: 13.5px;
+  --fs-lg: 15px;
+  --fs-xl: 18px;
+  --fs-2xl: 24px;
+  --fs-3xl: 30px;
+
+  /* Shape & depth */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --shadow-ao: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 1px 2px rgba(0, 0, 0, 0.35), 0 8px 24px -12px rgba(0, 0, 0, 0.55);
+  --shadow-pop: 0 1px 0 rgba(255, 255, 255, 0.05) inset, 0 24px 48px -16px rgba(0, 0, 0, 0.7), 0 2px 6px rgba(0, 0, 0, 0.4);
+
+  /* Motion */
+  --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 140ms;
+  --dur-med: 240ms;
+  --dur-slow: 420ms;
+
+  /* Layout */
+  --sidebar-w: 232px;
+  --topbar-h: 56px;
+  --drawer-w: 460px;
+  --gutter: 20px;
+
+  color-scheme: dark;
+}
