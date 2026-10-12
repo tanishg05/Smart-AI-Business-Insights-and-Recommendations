@@ -1,13 +1,40 @@
-export default function SectionCard({ title, subtitle, children }) {
+import { Sparkles } from 'lucide-react';
+import { useCopilot } from '../context/CopilotContext';
+
+/**
+ * Card shell for every chart and panel.
+ * Pass `inspect={{ query, data }}` to show the "Inspect with Groq" action, which sends the chart's data slice to the copilot.
+ */
+export default function SectionCard({ title, subtitle, tools, inspect, footer, children, className = '', bodyClassName = '', lift = false }) {
+  const { ask } = useCopilot();
+
   return (
-    <section className="panel">
-      <div className="panel__header">
-        <div>
-          <h3>{title}</h3>
-          {subtitle ? <p>{subtitle}</p> : null}
-        </div>
-      </div>
-      <div className="panel__body">{children}</div>
+    <section className={`card ${lift ? 'card--lift' : ''} ${className}`}>
+      {(title || tools || inspect) && (
+        <header className="card__head">
+          <div className="card__titles">
+            {title && <h3 className="card__title">{title}</h3>}
+            {subtitle && <p className="card__subtitle">{subtitle}</p>}
+          </div>
+          <div className="card__tools">
+            {tools}
+            {inspect && (
+              <button
+                type="button"
+                className="inspect-btn"
+                title="Inspect with Groq"
+                aria-label={`Inspect ${title} with Groq`}
+                onClick={() => ask(inspect.query || `Explain the key movements in "${title}" and what to do about them.`, { title, data: inspect.data })}
+              >
+                <Sparkles size={13} />
+                <span>Inspect</span>
+              </button>
+            )}
+          </div>
+        </header>
+      )}
+      <div className={`card__body ${bodyClassName}`}>{children}</div>
+      {footer && <footer className="card__foot">{footer}</footer>}
     </section>
   );
 }

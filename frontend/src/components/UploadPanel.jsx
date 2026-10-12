@@ -1,7 +1,7 @@
 import { useRef } from 'react';
-import { UploadCloud } from 'lucide-react';
+import { Loader2, UploadCloud } from 'lucide-react';
 
-export default function UploadPanel({ onUpload }) {
+export default function UploadPanel({ onUpload, busy, variant = 'default' }) {
   const inputRef = useRef(null);
 
   const handleChange = async (event) => {
@@ -12,18 +12,17 @@ export default function UploadPanel({ onUpload }) {
   };
 
   return (
-    <div className="upload-panel">
-      <div>
-        <h3>Upload CSV Dataset</h3>
-        <p>Use your supply chain or sales CSV to generate analytics.</p>
-      </div>
-
-      <button className="btn btn-primary" onClick={() => inputRef.current?.click()}>
-        <UploadCloud size={18} />
-        Upload CSV
+    <>
+      <button
+        type="button"
+        className={`btn ${variant === 'primary' ? 'btn--primary' : ''}`}
+        onClick={() => inputRef.current?.click()}
+        disabled={Boolean(busy)}
+      >
+        {busy ? <Loader2 size={14} style={{ animation: 'spin 0.8s linear infinite' }} /> : <UploadCloud size={14} />}
+        {busy ? 'Processing…' : 'Upload CSV'}
       </button>
-
-      <input ref={inputRef} type="file" accept=".csv" hidden onChange={handleChange} />
-    </div>
+      <input ref={inputRef} type="file" accept=".csv,text/csv" hidden onChange={handleChange} />
+    </>
   );
 }
