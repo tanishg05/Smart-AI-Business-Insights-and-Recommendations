@@ -22,6 +22,8 @@ import { CopilotProvider, useCopilot } from './context/CopilotContext';
 const VIEW_KEY = 'scid.view';
 
 function readView() {
+  const fromHash = window.location.hash.replace('#', '');
+  if (NAV_ITEMS.some((i) => i.key === fromHash)) return fromHash;
   try {
     const v = window.localStorage.getItem(VIEW_KEY);
     return NAV_ITEMS.some((i) => i.key === v) ? v : 'dashboard';
@@ -52,6 +54,7 @@ function Shell({ filters, setFilters }) {
 
   const selectView = useCallback((key) => {
     setActiveView(key);
+    window.history.replaceState(null, '', `#${key}`);
     try {
       window.localStorage.setItem(VIEW_KEY, key);
     } catch {
@@ -61,6 +64,15 @@ function Shell({ filters, setFilters }) {
   }, []);
 
   useHotkey('k', copilot.toggle);
+
+  useEffect(() => {
+    const onHash = () => {
+      const key = window.location.hash.replace('#', '');
+      if (NAV_ITEMS.some((i) => i.key === key)) setActiveView(key);
+    };
+    window.addEventListener('hashchange', onHash);
+    return () => window.removeEventListener('hashchange', onHash);
+  }, []);
 
   useEffect(() => {
     const onKey = (e) => {

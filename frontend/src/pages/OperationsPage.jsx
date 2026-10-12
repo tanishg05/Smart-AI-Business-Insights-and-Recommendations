@@ -4,7 +4,7 @@ import SectionCard from '../components/SectionCard';
 import ChartTooltip from '../components/ChartTooltip';
 import { DeficitTable } from './DashboardPage';
 import { COLORS, QUADRANT_COLOR, axisProps, gridProps } from '../utils/chartTheme';
-import { formatNumber, formatPercent } from '../utils/formatters';
+import { formatCompact, formatNumber, formatPercent } from '../utils/formatters';
 
 const QUADRANTS = ['Critical Low', 'Fast Mover', 'Overstocked', 'Dead Stock'];
 const QUADRANT_HINT = {
@@ -42,10 +42,10 @@ export default function OperationsPage({ data }) {
           }
         >
           <ResponsiveContainer width="100%" height={280}>
-            <ComposedChart data={lt.histogram} margin={{ top: 16, right: 8, left: -6, bottom: 0 }}>
+            <ComposedChart data={lt.histogram} margin={{ top: 16, right: 8, left: 0, bottom: 0 }}>
               <CartesianGrid {...gridProps} />
               <XAxis dataKey="days" type="number" domain={['dataMin - 0.5', 'dataMax + 0.5']} ticks={lt.histogram.map((h) => h.days)} {...axisProps} tickFormatter={(v) => `${v}d`} />
-              <YAxis {...axisProps} tickFormatter={(v) => formatNumber(v)} width={52} />
+              <YAxis {...axisProps} allowDecimals={false} tickFormatter={(v) => formatCompact(v, 0)} width={44} />
               <Tooltip
                 cursor={{ fill: 'rgba(255,255,255,0.03)' }}
                 content={
@@ -106,7 +106,7 @@ export default function OperationsPage({ data }) {
         className="span-2"
       >
         <ResponsiveContainer width="100%" height={360}>
-          <ScatterChart margin={{ top: 8, right: 12, left: -4, bottom: 4 }}>
+          <ScatterChart margin={{ top: 8, right: 12, left: 0, bottom: 4 }}>
             <CartesianGrid {...gridProps} vertical />
             <ReferenceArea x1={vm.x_split} x2={xMax} y1={0} y2={vm.y_split} fill={COLORS.coral} fillOpacity={0.04} />
             <ReferenceArea x1={0} x2={vm.x_split} y1={vm.y_split} y2={yMax} fill={COLORS.amber} fillOpacity={0.03} />

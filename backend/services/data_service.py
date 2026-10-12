@@ -372,7 +372,10 @@ class DataService:
         frame = df.assign(otif=df['on_time'] & df['in_full']).set_index('date')
         series = frame.resample(rule).agg({
             'revenue': 'sum', 'units_sold': 'sum', 'stock_available': 'sum', 'delivery_days': 'mean', 'otif': 'mean'
-        }).dropna(subset=['delivery_days']).tail(24)
+        }).dropna(subset=['delivery_days'])
+        if rule != 'D' and len(series) > 2 and frame.index[frame.index > series.index[-2]].normalize().nunique() < 7:
+            series = series.iloc[:-1]
+        series = series.tail(24)
 
         def turnover(part: pd.DataFrame) -> float:
             stock = part['stock_available'].sum()
@@ -438,7 +441,13 @@ class DataService:
 
     def _trend(self, df: pd.DataFrame) -> Dict[str, Any]:
         rule, granularity = self._resample_rule(df)
-        series = df.set_index('date').resample(rule).agg({'units_sold': 'sum', 'revenue': 'sum'})
+        frame = df.set_index('date')
+        series = frame.resample(rule).agg({'units_sold': 'sum', 'revenue': 'sum'})
+        if granularity == 'week' and len(series) > 2:
+            # Drop a trailing partial week so it doesn't read as a demand collapse.
+            last_days = frame.loc[frame.index > series.index[-2], :].index.normalize().nunique()
+            if last_days < 7:
+                series = series.iloc[:-1]
         series = series[(series['units_sold'] > 0) | (series['revenue'] > 0)].copy()
         series['ma'] = series['units_sold'].rolling(7, min_periods=1).mean()
         series['revenue_ma'] = series['revenue'].rolling(7, min_periods=1).mean()
@@ -462,8 +471,7 @@ class DataService:
         if len(values) < 3:
             return {'history': history, 'forecast': [], 'method': 'insufficient data'}
 
-        # The final weekly bucket is often partial; leave it out of the fit so it doesn't drag the trend.
-        fit_values = values[:-1] if len(values) > 8 else values
+        fit_values = values
         alpha, beta = 0.45, 0.15
         level, trend = fit_values[0], fit_values[1] - fit_values[0]
         fitted = []
@@ -478,11 +486,9 @@ class DataService:
         last = pd.to_datetime(series[-1]['period'])
         prev = pd.to_datetime(series[-2]['period'])
         step = last - prev if last > prev else pd.Timedelta(days=1)
-        offset = 0 if len(fit_values) == len(values) else -1
         forecast = []
         for h in range(1, horizon + 1):
-            steps = h - offset if offset else h
-            point = max(0.0, level + steps * trend)
+            point = max(0.0, level + h * trend)
             band = 1.96 * sigma * math.sqrt(h)
             forecast.append({
                 'period': (last + step * h).strftime('%Y-%m-%d'),

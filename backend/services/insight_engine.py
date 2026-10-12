@@ -266,7 +266,7 @@ class InsightEngine:
         total = sum(d['revenue_at_risk'] for d in deficits)
         lead = deficits[0] if deficits else None
         return f"""### Executive answer
-{len(within_14)} of the 5 tightest segments run out inside 14 days at current velocity. Stockout risk index is **{risk['value']:.1f}/100** ({risk.get('detail', '')}).
+{len(within_14)} of the {len(deficits)} tightest segments run out inside 14 days at current velocity. Stockout risk index is **{risk['value']:.1f}/100** ({risk.get('detail', '')}).
 
 | Segment | Stock | Units/day | Cover | Need | Gap units | Revenue at risk |
 |---|---:|---:|---:|---:|---:|---:|

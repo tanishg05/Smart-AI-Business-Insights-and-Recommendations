@@ -92,7 +92,7 @@ export default function SalesPage({ data }) {
           inspect={{ data: cr.stacked, query: 'Compare channel mix across regions. Which channel under-performs where, and how should we reallocate inventory or promotion spend?' }}
         >
           <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={cr.stacked} margin={{ top: 8, right: 4, left: -6, bottom: 0 }} barCategoryGap="28%">
+            <BarChart data={cr.stacked} margin={{ top: 8, right: 4, left: 0, bottom: 0 }} barCategoryGap="28%">
               <CartesianGrid {...gridProps} />
               <XAxis dataKey="region" {...axisProps} />
               <YAxis {...axisProps} tickFormatter={(v) => formatCurrency(v, { compact: true, digits: 0 })} width={56} />
@@ -147,10 +147,10 @@ export default function SalesPage({ data }) {
           inspect={{ data: el.points, query: 'What does this price-vs-volume relationship say about pricing headroom by category?' }}
         >
           <ResponsiveContainer width="100%" height={300}>
-            <ComposedChart margin={{ top: 8, right: 8, left: -6, bottom: 0 }}>
+            <ComposedChart margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
               <CartesianGrid {...gridProps} vertical />
-              <XAxis type="number" dataKey="price" {...axisProps} domain={['auto', 'auto']} tickFormatter={(v) => `$${v.toFixed(1)}`} allowDuplicatedCategory={false} />
-              <YAxis type="number" dataKey="units" {...axisProps} tickFormatter={(v) => formatCompact(v, 0)} width={44} />
+              <XAxis type="number" dataKey="price" {...axisProps} domain={[(min) => Math.floor(min * 0.95 * 10) / 10, (max) => Math.ceil(max * 1.03 * 10) / 10]} tickFormatter={(v) => `$${v.toFixed(2)}`} allowDuplicatedCategory={false} />
+              <YAxis type="number" dataKey="units" {...axisProps} domain={[(min) => Math.max(0, Math.floor(min * 0.9)), (max) => Math.ceil(max * 1.05)]} tickFormatter={(v) => formatCompact(v, 0)} width={44} />
               <ZAxis type="number" dataKey="n" range={[24, 140]} />
               <Tooltip
                 cursor={{ strokeDasharray: '2 3', stroke: 'rgba(255,255,255,0.2)' }}

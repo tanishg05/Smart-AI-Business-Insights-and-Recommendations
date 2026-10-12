@@ -6,7 +6,12 @@ import { useCopilot } from '../context/CopilotContext';
 import { COLORS, axisProps, gridProps } from '../utils/chartTheme';
 import { formatCompact, formatCurrency, formatDate, formatNumber, formatPercent } from '../utils/formatters';
 
+const SEASON_ORDER = ['Winter', 'Summer', 'Monsoon', 'Autumn'];
+const bySeason = (entries) =>
+  entries.sort(([a], [b]) => (SEASON_ORDER.indexOf(a) + 1 || 99) - (SEASON_ORDER.indexOf(b) + 1 || 99)).map(([season, days]) => ({ season, days }));
+
 export default function SeasonalPage({ data }) {
+  const seasonLead = bySeason(Object.entries(data.lead_time.by_season));
   const { ask } = useCopilot();
   const fc = data.forecast_series;
   const g = data.granularity;
@@ -36,7 +41,7 @@ export default function SeasonalPage({ data }) {
             <p className="muted">Not enough history to forecast.</p>
           ) : (
             <ResponsiveContainer width="100%" height={300}>
-              <ComposedChart data={series} margin={{ top: 8, right: 4, left: -6, bottom: 0 }}>
+              <ComposedChart data={series} margin={{ top: 8, right: 4, left: 0, bottom: 0 }}>
                 <CartesianGrid {...gridProps} />
                 <XAxis dataKey="period" {...axisProps} tickFormatter={(v) => formatDate(v, g)} minTickGap={32} />
                 <YAxis {...axisProps} tickFormatter={(v) => formatCompact(v, 0)} width={48} domain={['auto', 'auto']} />
@@ -65,7 +70,7 @@ export default function SeasonalPage({ data }) {
       <div className="grid grid--2">
         <SectionCard title="Seasonal volume" subtitle="Units and revenue by season" inspect={{ data: data.seasonal_sales }}>
           <ResponsiveContainer width="100%" height={240}>
-            <BarChart data={data.seasonal_sales} margin={{ top: 8, right: 4, left: -6, bottom: 0 }}>
+            <BarChart data={data.seasonal_sales} margin={{ top: 8, right: 4, left: 0, bottom: 0 }}>
               <CartesianGrid {...gridProps} />
               <XAxis dataKey="season" {...axisProps} />
               <YAxis {...axisProps} tickFormatter={(v) => formatCompact(v, 0)} width={48} />
@@ -85,12 +90,12 @@ export default function SeasonalPage({ data }) {
           </ResponsiveContainer>
         </SectionCard>
 
-        <SectionCard title="Seasonal lead time" subtitle="Mean delivery days by season" inspect={{ data: Object.entries(data.lead_time.by_season).map(([season, days]) => ({ season, days })) }}>
+        <SectionCard title="Seasonal lead time" subtitle="Mean delivery days by season" inspect={{ data: seasonLead }}>
           <ResponsiveContainer width="100%" height={240}>
-            <BarChart data={Object.entries(data.lead_time.by_season).map(([season, days]) => ({ season, days }))} margin={{ top: 8, right: 4, left: -6, bottom: 0 }}>
+            <BarChart data={seasonLead} margin={{ top: 8, right: 4, left: 0, bottom: 0 }}>
               <CartesianGrid {...gridProps} />
               <XAxis dataKey="season" {...axisProps} />
-              <YAxis {...axisProps} domain={[0, 'auto']} tickFormatter={(v) => `${v}d`} width={40} />
+              <YAxis {...axisProps} domain={[0, 'auto']} tickFormatter={(v) => `${v.toFixed(1)}d`} width={44} />
               <Tooltip cursor={{ fill: 'rgba(255,255,255,0.03)' }} content={<ChartTooltip rows={[{ key: 'days', label: 'Mean lead', color: COLORS.amber, format: (v) => `${v.toFixed(2)}d` }]} />} />
               <Bar dataKey="days" fill={COLORS.amber} fillOpacity={0.85} radius={[3, 3, 0, 0]} maxBarSize={48} />
             </BarChart>

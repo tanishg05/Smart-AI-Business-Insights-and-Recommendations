@@ -45,7 +45,7 @@ export default function InsightPills({ insights, loading, limit }) {
             <div>
               <div className="insight__metric-label">{item.metric?.label}</div>
               <div className="insight__metric-value">{item.metric?.value}</div>
-              {item.impact_usd > 0 && <div className="muted mono" style={{ fontSize: 11 }}>≈ {formatCurrency(item.impact_usd, { compact: true })}</div>}
+              {item.impact_usd > 0 && !String(item.metric?.value).startsWith('$') && <div className="muted mono" style={{ fontSize: 11 }}>≈ {formatCurrency(item.impact_usd, { compact: true })}</div>}
             </div>
             <button className="inspect-btn" onClick={() => ask(item.query)} title="Ask the copilot">
               <Sparkles size={13} />

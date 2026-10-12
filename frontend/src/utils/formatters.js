@@ -11,7 +11,8 @@ export function formatCompact(value, digits = 1) {
   const abs = Math.abs(n);
   if (abs >= 1e9) return `${(n / 1e9).toFixed(digits)}B`;
   if (abs >= 1e6) return `${(n / 1e6).toFixed(digits)}M`;
-  if (abs >= 1e3) return `${(n / 1e3).toFixed(digits)}K`;
+  // Keep one decimal below 10K so adjacent axis ticks ($1.2K, $1.4K) stay distinct.
+  if (abs >= 1e3) return `${(n / 1e3).toFixed(abs < 1e4 ? Math.max(digits, 1) : digits)}K`;
   return formatNumber(n, abs < 10 && n % 1 !== 0 ? 2 : 0);
 }
 

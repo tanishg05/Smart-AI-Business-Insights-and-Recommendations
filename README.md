@@ -159,10 +159,44 @@ npm run dev
 - Frontend: http://localhost:3000
 - Backend: http://127.0.0.1:8000
 
+## Groq Intelligence
+
+The copilot (⌘K / Ctrl+K), proactive insights, chart "Inspect" buttons and the Scenario Lab briefing are powered by Groq.
+
+1. Create a key at https://console.groq.com/keys.
+2. Add it to `backend/.env` (never commit this file):
+
+```env
+GROQ_API_KEY=gsk_...
+GROQ_MODEL=llama-3.3-70b-versatile
+```
+
+3. Restart the backend.
+
+Without a key, every AI surface falls back to a built-in analytics engine that answers from the same computed metrics, so the dashboard stays fully usable. The key stays on the server and is never sent to the browser.
+
+Before each Groq call the backend serialises a dense data brief (aggregate KPIs, top deficit SKU-locations, regional seasonality index, lead-time variance, turnover, forecast) into the system prompt.
+
+## Views
+
+- **Overview**: KPI badges (revenue, turnover, OTIF, stockout risk index, lead time) with deltas and sparklines, revenue trajectory vs moving-average baseline, proactive signals, top stock deficits
+- **Demand & Sales**: region × channel stacked revenue, channel efficiency matrix, price elasticity scatter with fitted curve, category performance
+- **Operations**: lead-time histogram with normal fit, lead time by region, stock vs velocity quadrant (Critical Low / Fast Mover / Overstocked / Dead Stock), replenishment queue
+- **Seasonality**: season × region heatmap, 7-period Holt forecast with 95% band, seasonal volume and lead time
+- **Scenario Lab**: live what-if sliders (supplier delay, demand surge, safety stock buffer, price) with lost sales, stockout probability, fill rate and holding cost
+- **Intelligence Hub**: proactive insights, one-click prompts, recommendations
+
+Region, channel, category and season filters apply to every view and to the copilot's context. Views are deep-linkable (`/#operations`) and switchable with keys 1–6.
+
 ## API Endpoints
 
 - `GET /health`
-- `GET /dashboard`
+- `GET /dashboard` (optional `region`, `channel`, `category`, `season`, `date_from`, `date_to`)
+- `GET /api/datasets`, `POST /api/datasets/load`
+- `GET /api/ai/status`
+- `POST /api/ai/query` (SSE stream; `{query, context_filters?, conversation_history?, chart_context?, stream?}`)
+- `GET /api/ai/proactive-insights`
+- `POST /api/ai/scenario-simulate` (alias `/api/ai/scenario`)
 - `GET /sales`
 - `GET /seasonality`
 - `GET /operations`

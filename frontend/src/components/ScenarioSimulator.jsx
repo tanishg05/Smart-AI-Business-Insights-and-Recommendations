@@ -177,7 +177,7 @@ export default function ScenarioSimulator({ filters }) {
             inspect={result && { data: result.delay_curve, query: 'Interpret this delay sensitivity curve: where does lost revenue accelerate and what buffer would flatten it?' }}
           >
             <ResponsiveContainer width="100%" height={240}>
-              <ComposedChart data={result?.delay_curve || []} margin={{ top: 8, right: 8, left: -8, bottom: 0 }}>
+              <ComposedChart data={result?.delay_curve || []} margin={{ top: 18, right: 8, left: 0, bottom: 0 }}>
                 <defs>
                   <linearGradient id="lossFill" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stopColor={COLORS.coral} stopOpacity={0.28} />
@@ -208,7 +208,7 @@ export default function ScenarioSimulator({ filters }) {
 
           <SectionCard title="Lost sales by region" subtitle="Baseline vs scenario" inspect={result && { data: regions }}>
             <ResponsiveContainer width="100%" height={240}>
-              <BarChart data={regions} margin={{ top: 8, right: 8, left: -8, bottom: 0 }} barGap={3}>
+              <BarChart data={regions} margin={{ top: 8, right: 8, left: 0, bottom: 0 }} barGap={3}>
                 <CartesianGrid {...gridProps} />
                 <XAxis dataKey="region" {...axisProps} />
                 <YAxis {...axisProps} tickFormatter={(v) => formatCurrency(v, { compact: true, digits: 0 })} width={56} />
