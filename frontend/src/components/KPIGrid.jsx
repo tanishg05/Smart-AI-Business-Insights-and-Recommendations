@@ -3,10 +3,12 @@ import { ArrowDownRight, ArrowUpRight, Minus } from 'lucide-react';
 import useCountUp from '../hooks/useCountUp';
 import { STATUS_COLOR } from '../utils/chartTheme';
 import { formatDelta, formatKpi } from '../utils/formatters';
+import useMountAnimation from '../hooks/useMountAnimation';
 
 const STATUS_LABEL = { healthy: 'Healthy', warning: 'Watch', critical: 'Critical' };
 
 function Sparkline({ values, color, id }) {
+  const animate = useMountAnimation();
   if (!values || values.length < 2) return <div className="kpi__spark" />;
   const data = values.map((v, i) => ({ i, v }));
   return (
@@ -20,7 +22,7 @@ function Sparkline({ values, color, id }) {
             </linearGradient>
           </defs>
           <YAxis hide domain={['dataMin', 'dataMax']} />
-          <Area type="monotone" dataKey="v" stroke={color} strokeWidth={1.5} fill={`url(#spark-${id})`} isAnimationActive animationDuration={700} />
+          <Area type="monotone" dataKey="v" stroke={color} strokeWidth={1.5} fill={`url(#spark-${id})`} isAnimationActive={animate} animationDuration={700} />
         </AreaChart>
       </ResponsiveContainer>
     </div>

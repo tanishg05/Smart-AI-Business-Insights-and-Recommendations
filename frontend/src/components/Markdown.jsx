@@ -5,8 +5,11 @@ import { Fragment } from 'react';
 
 const INLINE = /(\*\*[^*]+\*\*|`[^`]+`|\*[^*\s][^*]*\*|_[^_\s][^_]*_)/g;
 
+// Models often escape markdown characters (\*, \|, \_); show them literally.
+const unescape = (t) => String(t).replace(/\\([\\`*_{}\[\]()#+\-.!|>~])/g, '$1');
+
 function renderInline(text, keyPrefix) {
-  const parts = String(text).split(INLINE);
+  const parts = String(text).split(INLINE).map((p) => (p && !p.startsWith('`') ? unescape(p) : p));
   return parts.map((part, i) => {
     const key = `${keyPrefix}-${i}`;
     if (!part) return null;

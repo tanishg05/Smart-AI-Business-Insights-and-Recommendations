@@ -5,12 +5,14 @@ import Heatmap from '../components/Heatmap';
 import { useCopilot } from '../context/CopilotContext';
 import { COLORS, axisProps, gridProps } from '../utils/chartTheme';
 import { formatCompact, formatCurrency, formatDate, formatNumber, formatPercent } from '../utils/formatters';
+import useMountAnimation from '../hooks/useMountAnimation';
 
 const SEASON_ORDER = ['Winter', 'Summer', 'Monsoon', 'Autumn'];
 const bySeason = (entries) =>
   entries.sort(([a], [b]) => (SEASON_ORDER.indexOf(a) + 1 || 99) - (SEASON_ORDER.indexOf(b) + 1 || 99)).map(([season, days]) => ({ season, days }));
 
 export default function SeasonalPage({ data }) {
+  const animate = useMountAnimation();
   const seasonLead = bySeason(Object.entries(data.lead_time.by_season));
   const { ask } = useCopilot();
   const fc = data.forecast_series;
@@ -59,8 +61,8 @@ export default function SeasonalPage({ data }) {
                   }
                 />
                 <Area type="monotone" dataKey="band" stroke="none" fill={COLORS.emerald} fillOpacity={0.12} isAnimationActive={false} />
-                <Line type="monotone" dataKey="actual" stroke={COLORS.ice} strokeWidth={1.75} dot={false} />
-                <Line type="monotone" dataKey="forecast" stroke={COLORS.emerald} strokeWidth={1.75} strokeDasharray="5 3" dot={{ r: 2, strokeWidth: 0, fill: COLORS.emerald }} />
+                <Line isAnimationActive={animate} type="monotone" dataKey="actual" stroke={COLORS.ice} strokeWidth={1.75} dot={false} />
+                <Line isAnimationActive={animate} type="monotone" dataKey="forecast" stroke={COLORS.emerald} strokeWidth={1.75} strokeDasharray="5 3" dot={{ r: 2, strokeWidth: 0, fill: COLORS.emerald }} />
               </ComposedChart>
             </ResponsiveContainer>
           )}
@@ -85,7 +87,7 @@ export default function SeasonalPage({ data }) {
                   />
                 }
               />
-              <Bar dataKey="units_sold" fill={COLORS.ice} radius={[3, 3, 0, 0]} maxBarSize={48} />
+              <Bar isAnimationActive={animate} dataKey="units_sold" fill={COLORS.ice} radius={[3, 3, 0, 0]} maxBarSize={48} />
             </BarChart>
           </ResponsiveContainer>
         </SectionCard>
@@ -97,7 +99,7 @@ export default function SeasonalPage({ data }) {
               <XAxis dataKey="season" {...axisProps} />
               <YAxis {...axisProps} domain={[0, 'auto']} tickFormatter={(v) => `${v.toFixed(1)}d`} width={44} />
               <Tooltip cursor={{ fill: 'rgba(255,255,255,0.03)' }} content={<ChartTooltip rows={[{ key: 'days', label: 'Mean lead', color: COLORS.amber, format: (v) => `${v.toFixed(2)}d` }]} />} />
-              <Bar dataKey="days" fill={COLORS.amber} fillOpacity={0.85} radius={[3, 3, 0, 0]} maxBarSize={48} />
+              <Bar isAnimationActive={animate} dataKey="days" fill={COLORS.amber} fillOpacity={0.85} radius={[3, 3, 0, 0]} maxBarSize={48} />
             </BarChart>
           </ResponsiveContainer>
         </SectionCard>

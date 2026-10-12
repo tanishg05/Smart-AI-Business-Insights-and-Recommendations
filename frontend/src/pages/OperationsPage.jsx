@@ -5,6 +5,7 @@ import ChartTooltip from '../components/ChartTooltip';
 import { DeficitTable } from './DashboardPage';
 import { COLORS, QUADRANT_COLOR, axisProps, gridProps } from '../utils/chartTheme';
 import { formatCompact, formatNumber, formatPercent } from '../utils/formatters';
+import useMountAnimation from '../hooks/useMountAnimation';
 
 const QUADRANTS = ['Critical Low', 'Fast Mover', 'Overstocked', 'Dead Stock'];
 const QUADRANT_HINT = {
@@ -15,6 +16,7 @@ const QUADRANT_HINT = {
 };
 
 export default function OperationsPage({ data }) {
+  const animate = useMountAnimation();
   const lt = data.lead_time;
   const vm = data.velocity_matrix;
   const [hidden, setHidden] = useState({});
@@ -58,12 +60,12 @@ export default function OperationsPage({ data }) {
                   />
                 }
               />
-              <Bar dataKey="count" barSize={36} radius={[3, 3, 0, 0]}>
+              <Bar isAnimationActive={animate} dataKey="count" barSize={36} radius={[3, 3, 0, 0]}>
                 {lt.histogram.map((h) => (
                   <Cell key={h.days} fill={h.anomaly ? COLORS.coral : h.days > lt.sla_days ? COLORS.amber : COLORS.ice} fillOpacity={0.85} />
                 ))}
               </Bar>
-              <Line type="monotone" dataKey="normal" stroke={COLORS.slate} strokeWidth={1.25} strokeDasharray="4 3" dot={false} />
+              <Line isAnimationActive={animate} type="monotone" dataKey="normal" stroke={COLORS.slate} strokeWidth={1.25} strokeDasharray="4 3" dot={false} />
               <ReferenceLine x={lt.mean} stroke={COLORS.text} strokeOpacity={0.5} strokeDasharray="2 3" label={{ value: 'μ', fill: COLORS.text, fontSize: 11, position: 'top' }} />
               <ReferenceLine x={lt.sla_days + 0.5} stroke={COLORS.amber} strokeOpacity={0.6} label={{ value: 'SLA', fill: COLORS.amber, fontSize: 10, position: 'top' }} />
             </ComposedChart>
@@ -89,7 +91,7 @@ export default function OperationsPage({ data }) {
                 }
               />
               <ReferenceLine x={lt.sla_days} stroke={COLORS.amber} strokeDasharray="3 3" />
-              <Bar dataKey="mean" radius={[0, 3, 3, 0]} maxBarSize={18}>
+              <Bar isAnimationActive={animate} dataKey="mean" radius={[0, 3, 3, 0]} maxBarSize={18}>
                 {lt.by_region.map((r) => (
                   <Cell key={r.region} fill={r.mean > lt.sla_days ? COLORS.amber : COLORS.ice} />
                 ))}
@@ -129,7 +131,7 @@ export default function OperationsPage({ data }) {
                 />
               }
             />
-            <Scatter data={points} isAnimationActive animationDuration={500}>
+            <Scatter data={points} isAnimationActive={animate} animationDuration={500}>
               {points.map((p) => (
                 <Cell key={p.segment} fill={QUADRANT_COLOR[p.quadrant]} fillOpacity={p.at_risk ? 0.95 : 0.6} stroke={p.at_risk ? COLORS.text : 'none'} strokeWidth={p.at_risk ? 1 : 0} />
               ))}

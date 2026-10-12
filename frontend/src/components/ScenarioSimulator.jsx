@@ -8,6 +8,7 @@ import useCountUp from '../hooks/useCountUp';
 import ChartTooltip from './ChartTooltip';
 import Markdown from './Markdown';
 import SectionCard from './SectionCard';
+import useMountAnimation from '../hooks/useMountAnimation';
 
 const DEFAULTS = { delay_days: 0, demand_shift_pct: 0, safety_stock_multiplier: 1, price_change_pct: 0 };
 
@@ -42,6 +43,7 @@ function Stat({ label, value, base, format, invert }) {
 }
 
 export default function ScenarioSimulator({ filters }) {
+  const animate = useMountAnimation();
   const [params, setParams] = useState(DEFAULTS);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -199,8 +201,8 @@ export default function ScenarioSimulator({ filters }) {
                     />
                   }
                 />
-                <Area yAxisId="l" type="monotone" dataKey="lost_revenue" stroke={COLORS.coral} strokeWidth={1.75} fill="url(#lossFill)" />
-                <Line yAxisId="r" type="monotone" dataKey="stockout_probability" stroke={COLORS.amber} strokeWidth={1.25} strokeDasharray="3 3" dot={false} />
+                <Area isAnimationActive={animate} yAxisId="l" type="monotone" dataKey="lost_revenue" stroke={COLORS.coral} strokeWidth={1.75} fill="url(#lossFill)" />
+                <Line isAnimationActive={animate} yAxisId="r" type="monotone" dataKey="stockout_probability" stroke={COLORS.amber} strokeWidth={1.25} strokeDasharray="3 3" dot={false} />
                 <ReferenceLine yAxisId="l" x={params.delay_days} stroke={COLORS.ice} strokeDasharray="2 3" label={{ value: 'now', fill: COLORS.ice, fontSize: 10, position: 'top' }} />
               </ComposedChart>
             </ResponsiveContainer>
@@ -224,8 +226,8 @@ export default function ScenarioSimulator({ filters }) {
                     />
                   }
                 />
-                <Bar dataKey="baseline" name="Baseline" fill="rgba(148,163,184,0.35)" radius={[3, 3, 0, 0]} maxBarSize={28} />
-                <Bar dataKey="scenario" name="Scenario" fill={COLORS.coral} radius={[3, 3, 0, 0]} maxBarSize={28} />
+                <Bar isAnimationActive={animate} dataKey="baseline" name="Baseline" fill="rgba(148,163,184,0.35)" radius={[3, 3, 0, 0]} maxBarSize={28} />
+                <Bar isAnimationActive={animate} dataKey="scenario" name="Scenario" fill={COLORS.coral} radius={[3, 3, 0, 0]} maxBarSize={28} />
               </BarChart>
             </ResponsiveContainer>
           </SectionCard>

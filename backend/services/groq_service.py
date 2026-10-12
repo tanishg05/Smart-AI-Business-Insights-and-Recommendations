@@ -34,7 +34,7 @@ The most likely driver, tied to specific metrics.
 ### Tactical actions
 A numbered list. Each action names the lever, the target value, and an estimated financial impact in dollars.
 ### Metric citations
-Bullets quoting the exact figures from the DATA BRIEF you relied on.
+Bullets quoting the exact figures you relied on (do not append source tags such as [DATA BRIEF]).
 Use a markdown table when comparing 3+ items. Only use numbers present in the DATA BRIEF or derived from them; if data is missing, say so.
 Glossary: velocity = avg daily units over the last 7 days; cover = stock ÷ velocity (days); need = lead time + 7-day review; reorder point uses a 95% service level."""
 

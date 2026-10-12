@@ -4,6 +4,7 @@ import SectionCard from '../components/SectionCard';
 import ChartTooltip from '../components/ChartTooltip';
 import { COLORS, SERIES, axisProps, gridProps } from '../utils/chartTheme';
 import { formatCompact, formatCurrency, formatNumber, formatPercent } from '../utils/formatters';
+import useMountAnimation from '../hooks/useMountAnimation';
 
 function Legend({ items }) {
   return (
@@ -68,6 +69,7 @@ const METRICS = [
 ];
 
 export default function SalesPage({ data }) {
+  const animate = useMountAnimation();
   const cr = data.channel_region;
   const el = data.elasticity;
   const [metric, setMetric] = useState(METRICS[0]);
@@ -108,7 +110,7 @@ export default function SalesPage({ data }) {
                 }
               />
               {cr.channels.map((c, i) => (
-                <Bar key={c} dataKey={c} stackId="rev" fill={channelColors[c]} radius={i === cr.channels.length - 1 ? [3, 3, 0, 0] : 0} maxBarSize={64} />
+                <Bar isAnimationActive={animate} key={c} dataKey={c} stackId="rev" fill={channelColors[c]} radius={i === cr.channels.length - 1 ? [3, 3, 0, 0] : 0} maxBarSize={64} />
               ))}
             </BarChart>
           </ResponsiveContainer>
@@ -166,7 +168,7 @@ export default function SalesPage({ data }) {
                 }
               />
               {categories.map((c, i) => (
-                <Scatter key={c} name={c} data={byCategory[c]} fill={SERIES[i % SERIES.length]} fillOpacity={0.75} />
+                <Scatter isAnimationActive={animate} key={c} name={c} data={byCategory[c]} fill={SERIES[i % SERIES.length]} fillOpacity={0.75} />
               ))}
               {el.trendline?.length > 0 && (
                 <Line data={el.trendline} dataKey="units" stroke={COLORS.text} strokeOpacity={0.55} strokeWidth={1.25} strokeDasharray="5 4" dot={false} activeDot={false} legendType="none" isAnimationActive={false} />
@@ -194,7 +196,7 @@ export default function SalesPage({ data }) {
                   />
                 }
               />
-              <Bar dataKey="revenue" fill={COLORS.ice} radius={[0, 3, 3, 0]} maxBarSize={18} />
+              <Bar isAnimationActive={animate} dataKey="revenue" fill={COLORS.ice} radius={[0, 3, 3, 0]} maxBarSize={18} />
             </BarChart>
           </ResponsiveContainer>
         </SectionCard>

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { ArrowUp, BarChart3, Check, Copy, Info, RotateCcw, Sparkles, Square, Trash2, X } from 'lucide-react';
-import { useCopilot } from '../context/CopilotContext';
+import { useCopilot, useCopilotChat } from '../context/CopilotContext';
 import Markdown from './Markdown';
 
 export const QUICK_PROMPTS = [
@@ -82,7 +82,8 @@ function Message({ msg, onRetry }) {
 }
 
 export default function GroqCopilotDrawer({ hasData }) {
-  const { open, setOpen, messages, streaming, ask, stop, clear, status, setKeyModal } = useCopilot();
+  const { open, setOpen, ask, status, setKeyModal } = useCopilot();
+  const { messages, streaming, stop, clear } = useCopilotChat();
   const [input, setInput] = useState('');
   const bodyRef = useRef(null);
   const inputRef = useRef(null);

@@ -8,6 +8,7 @@ import ErrorState from './components/ErrorState';
 import EmptyState from './components/EmptyState';
 import GroqCopilotDrawer from './components/GroqCopilotDrawer';
 import KeyConfigModal from './components/KeyConfigModal';
+import ErrorBoundary from './components/ErrorBoundary';
 import DashboardPage from './pages/DashboardPage';
 import SalesPage from './pages/SalesPage';
 import SeasonalPage from './pages/SeasonalPage';
@@ -117,7 +118,12 @@ function Shell({ filters, setFilters }) {
         </div>
       </div>
     );
-  else if (data) body = <View key={activeView} view={activeView} data={data} insights={insights} filters={filters} />;
+  else if (data)
+    body = (
+      <ErrorBoundary resetKey={`${activeView}|${data.loaded_at}|${JSON.stringify(filters)}`}>
+        <View key={activeView} view={activeView} data={data} insights={insights} filters={filters} />
+      </ErrorBoundary>
+    );
 
   return (
     <div className="app-shell">

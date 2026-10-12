@@ -7,6 +7,7 @@ import RecommendationCard from '../components/RecommendationCard';
 import ChartTooltip from '../components/ChartTooltip';
 import { COLORS, axisProps, gridProps } from '../utils/chartTheme';
 import { formatCompact, formatCurrency, formatDate, formatNumber } from '../utils/formatters';
+import useMountAnimation from '../hooks/useMountAnimation';
 
 export function DeficitTable({ deficits = [] }) {
   if (!deficits.length) return <p className="muted" style={{ padding: 16 }}>No segments to rank.</p>;
@@ -58,6 +59,7 @@ export function DeficitTable({ deficits = [] }) {
 }
 
 export default function DashboardPage({ data, insights }) {
+  const animate = useMountAnimation();
   const trend = data.trend || [];
   const g = data.granularity;
 
@@ -103,9 +105,9 @@ export default function DashboardPage({ data, insights }) {
                 }
               />
               <Legend verticalAlign="top" align="right" height={24} iconType="plainline" iconSize={12} wrapperStyle={{ fontSize: 11, color: 'var(--text-secondary)' }} />
-              <Area yAxisId="u" type="monotone" dataKey="units" name="Units sold" stroke={COLORS.ice} strokeWidth={1.75} fill="url(#unitsFill)" activeDot={{ r: 3, strokeWidth: 0 }} />
-              <Line yAxisId="u" type="monotone" dataKey="ma" name="MA baseline" stroke={COLORS.slate} strokeWidth={1.25} strokeDasharray="4 3" dot={false} />
-              <Line yAxisId="r" type="monotone" dataKey="revenue" name="Revenue" stroke="#D9C8A6" strokeWidth={1} strokeOpacity={0.7} dot={false} />
+              <Area isAnimationActive={animate} yAxisId="u" type="monotone" dataKey="units" name="Units sold" stroke={COLORS.ice} strokeWidth={1.75} fill="url(#unitsFill)" activeDot={{ r: 3, strokeWidth: 0 }} />
+              <Line isAnimationActive={animate} yAxisId="u" type="monotone" dataKey="ma" name="MA baseline" stroke={COLORS.slate} strokeWidth={1.25} strokeDasharray="4 3" dot={false} />
+              <Line isAnimationActive={animate} yAxisId="r" type="monotone" dataKey="revenue" name="Revenue" stroke="#D9C8A6" strokeWidth={1} strokeOpacity={0.7} dot={false} />
             </ComposedChart>
           </ResponsiveContainer>
         </SectionCard>

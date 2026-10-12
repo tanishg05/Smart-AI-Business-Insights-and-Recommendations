@@ -2,7 +2,7 @@ import { ArrowUpRight, KeyRound, MessageSquareText, RotateCw, Sparkles } from 'l
 import SectionCard from '../components/SectionCard';
 import InsightPills from '../components/InsightPills';
 import { QUICK_PROMPTS } from '../components/GroqCopilotDrawer';
-import { useCopilot } from '../context/CopilotContext';
+import { useCopilot, useCopilotChat } from '../context/CopilotContext';
 import RecommendationsPage from './RecommendationsPage';
 import { COLORS } from '../utils/chartTheme';
 import { formatNumber, formatPercent } from '../utils/formatters';
@@ -12,13 +12,31 @@ const EXTRA_PROMPTS = [
   'What safety stock should each region hold to reach a 95% service level?',
 ];
 
+// Subscribes to the chat transcript on its own so streaming doesn't re-render the hub.
+function RecentQuestions() {
+  const { setOpen } = useCopilot();
+  const { messages } = useCopilotChat();
+  const recent = messages.filter((m) => m.role === 'user').slice(-3).reverse();
+  if (!recent.length) return null;
+  return (
+    <SectionCard title="Recent questions">
+      <div style={{ display: 'grid', gap: 6 }}>
+        {recent.map((m) => (
+          <button key={m.id} className="chip" onClick={() => setOpen(true)}>
+            {m.content}
+          </button>
+        ))}
+      </div>
+    </SectionCard>
+  );
+}
+
 export default function AIPage({ data, insights }) {
-  const { ask, status, setKeyModal, messages, setOpen } = useCopilot();
+  const { ask, status, setKeyModal, setOpen } = useCopilot();
   const classification = data.demand_classification || [];
   const total = classification.reduce((s, c) => s + c.count, 0) || 1;
   const counts = { CRITICAL: 0, WARNING: 0, OPPORTUNITY: 0 };
   (insights.insights || []).forEach((i) => (counts[i.severity] += 1));
-  const recent = messages.filter((m) => m.role === 'user').slice(-3).reverse();
 
   return (
     <div className="view">
@@ -108,17 +126,7 @@ export default function AIPage({ data, insights }) {
             </p>
           </SectionCard>
 
-          {recent.length > 0 && (
-            <SectionCard title="Recent questions">
-              <div style={{ display: 'grid', gap: 6 }}>
-                {recent.map((m) => (
-                  <button key={m.id} className="chip" onClick={() => setOpen(true)}>
-                    {m.content}
-                  </button>
-                ))}
-              </div>
-            </SectionCard>
-          )}
+          <RecentQuestions />
         </div>
       </div>
 

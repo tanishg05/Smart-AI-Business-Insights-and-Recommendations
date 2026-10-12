@@ -1,7 +1,11 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { fetchAIStatus, streamAIQuery } from '../services/api';
 
+// Two contexts: the chat transcript changes on every streamed token, so only the drawer
+// subscribes to it. Everything else (ask, open state, Groq status) stays stable, which
+// keeps the dashboard from re-rendering while an answer streams in.
 const CopilotContext = createContext(null);
+const CopilotChatContext = createContext(null);
 
 let nextId = 1;
 const MAX_CHART_ROWS = 40;
@@ -100,29 +104,29 @@ export function CopilotProvider({ filters, children }) {
     setMessages([]);
   }, [stop]);
 
-  const value = useMemo(
-    () => ({
-      open,
-      setOpen,
-      toggle: () => setOpen((o) => !o),
-      messages,
-      streaming,
-      ask,
-      stop,
-      clear,
-      status,
-      refreshStatus,
-      keyModal,
-      setKeyModal,
-    }),
-    [open, messages, streaming, ask, stop, clear, status, refreshStatus, keyModal]
-  );
+  const toggle = useCallback(() => setOpen((o) => !o), []);
 
-  return <CopilotContext.Provider value={value}>{children}</CopilotContext.Provider>;
+  const value = useMemo(
+    () => ({ open, setOpen, toggle, ask, status, refreshStatus, keyModal, setKeyModal }),
+    [open, toggle, ask, status, refreshStatus, keyModal]
+  );
+  const chat = useMemo(() => ({ messages, streaming, stop, clear }), [messages, streaming, stop, clear]);
+
+  return (
+    <CopilotContext.Provider value={value}>
+      <CopilotChatContext.Provider value={chat}>{children}</CopilotChatContext.Provider>
+    </CopilotContext.Provider>
+  );
 }
 
 export function useCopilot() {
   const ctx = useContext(CopilotContext);
   if (!ctx) throw new Error('useCopilot must be used inside CopilotProvider');
+  return ctx;
+}
+
+export function useCopilotChat() {
+  const ctx = useContext(CopilotChatContext);
+  if (!ctx) throw new Error('useCopilotChat must be used inside CopilotProvider');
   return ctx;
 }
