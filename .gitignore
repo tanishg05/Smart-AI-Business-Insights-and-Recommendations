@@ -40,6 +40,8 @@ coverage/
 backend/uploads/*.csv
 !backend/uploads/test.csv
 !backend/uploads/test_supply_chain.csv
+# Reference dataset shipped with the deployed backend (DEFAULT_DATASET)
+!backend/uploads/fmcg_clean.csv
 
 # Misc
 *.sqlite3

@@ -25,9 +25,13 @@ allowed_origins = [o.strip() for o in os.getenv(
     'http://localhost:3000,http://127.0.0.1:3000'
 ).split(',') if o.strip()]
 
+# Optional regex so every Vercel preview URL (https://<project>-<hash>.vercel.app) is allowed too.
+allowed_origin_regex = os.getenv('BACKEND_CORS_ORIGIN_REGEX', '').strip() or None
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
+    allow_origin_regex=allowed_origin_regex,
     allow_credentials=True,
     allow_methods=['*'],
     allow_headers=['*'],
